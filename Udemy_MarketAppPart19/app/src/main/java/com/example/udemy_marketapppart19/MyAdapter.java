@@ -15,6 +15,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     private List<Item> itemList;
 
+    public ItemClickListener clickListener;
+    public void setClickListener(ItemClickListener myListener){
+        this.clickListener = myListener;
+    }
+
     public MyAdapter(List<Item> itemList) {
         this.itemList = itemList;
     }
@@ -35,15 +40,22 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         //Binds the data from the dataset to the view within the view holder
         Item item = itemList.get(position);
 
+        holder.title.setText(item.getItemName());
+        holder.description.setText(item.getItemDesc());
+        holder.imageView.setImageResource(item.getItemImg());
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        //Returns the total number of items in your dataset
+
+        return itemList.size();
     }
 
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder
+    public class MyViewHolder
+            extends RecyclerView.ViewHolder
+            implements View.OnClickListener
     {
         //Holdes references to the view within the item layout
         ImageView imageView;
@@ -54,6 +66,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             imageView = itemView.findViewById(R.id.imageview);
             title = itemView.findViewById(R.id.title_txt);
             description = itemView.findViewById(R.id.description_txt);
+
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            if(clickListener != null){
+                clickListener.onClick(view, getAdapterPosition());
+            }
         }
     }
 }
